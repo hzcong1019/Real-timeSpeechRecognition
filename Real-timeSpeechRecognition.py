@@ -19,15 +19,35 @@ speak_out = w32.Dispatch('SAPI.SPVOICE')
 # 图灵机器人获取回复消息
 def talks_robot(info='hello world'):
     # 图灵机器人api接口
-    api_url = 'http://www.tuling123.com/openapi/api'
+    api_url = 'http://openapi.turingapi.com/openapi/api/v2'
     # 这里替换你的图灵api密钥
     api_key = 'xxx'
-    data = {'key': api_key,
-            'info': info}
+    data = {
+        'reqType': 0,
+        'perception': {
+            'inputText': {
+                'text': info
+            },
+            'inputImage': {
+                'url': 'imageUrl'
+            },
+            'selfInfo': {
+                'location': {
+                    'city': '广州',
+                    'province': '广州',
+                    'street': '某某街'
+                }
+            }
+        },
+        'userInfo': {
+            'apiKey': api_key,
+            'userId': '0'
+        }
+    }
     # 通过接收消息info,对数据在封装，向灵图机器人发出请求请求，并获得回复
-    req = requests.post(api_url, data=data).text
+    req = requests.post(api_url, json=data).text
     # loads方法是把json对象转化为python对象，dumps方法是把pyhon对象转化为json对象
-    replys = json.loads(req)['text']
+    replys = json.loads(req)['results'][0]['values']['text']
     return replys  # 返回回复数据
 
 
